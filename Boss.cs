@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class LocalBoss : MonoBehaviour {
+public class Boss : MonoBehaviour {
 
     public float health = 1000f;
     public float maxHealth = 1000f;
