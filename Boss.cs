@@ -5,47 +5,36 @@ using UnityEngine.UI;
 
 public class Boss : MonoBehaviour {
 
+    public int shotsFired = 0;
+	int index;
+
+	public float waitingTime = 3;
     public float health = 1000f;
     public float maxHealth = 1000f;
-    public Image healthBar;
+	public Image healthBar;
+	public float wanderRadius = 100f;
+	float timer;
 
     public GameObject projectile;
     public GameObject homingProj;
     public GameObject shockwave;
     public GameObject magicStorm;
     public GameObject chargeUp;
-    public GameObject party;
+    public GameObject death;
+    GameObject[] players;
+	GameObject[] sWaves;
 
     public Transform projectileSpawn;
+    Transform target;
 
     Rigidbody rb;
-
+    Animator anim;
+	NavMeshAgent agent;
     Material bossMat;
-
-    GameObject[] players;
-
-
-    Transform target;
-    int index;
-
-    GameObject[] sWaves;
-
-    float timer;
-    public float waitingTime = 3;
-    public int shotsFired = 0;
-
+    Vector3 wanderPoint;
+	
     private BossActionType eCurState = BossActionType.Attack1;
 
-    NavMeshAgent agent;
-    public float wanderRadius = 100f;
-    Vector3 wanderPoint;
-
-    Animator anim;
-
-
-    
-
-    // Use this for initialization
     void Start ()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -54,7 +43,6 @@ public class Boss : MonoBehaviour {
         Physics.IgnoreLayerCollision(12, 12);
     }
 
-    // Update is called once per frame
     void Update ()
 	{
 
@@ -66,17 +54,12 @@ public class Boss : MonoBehaviour {
         float healthRatio = health / maxHealth;
         healthBar.fillAmount = healthRatio;
 
-        //if (eCurState != BossActionType.Moving)
-        //{
-        //    agent.isStopped = true;
-        //    transform.LookAt(target);
-        //}
 
         timer += Time.deltaTime;
 
         if (health <= 0)
         {
-            Party();
+            Death();
             Destroy(gameObject);
         }
 
@@ -120,9 +103,9 @@ public class Boss : MonoBehaviour {
     }
 
     
-    void Party()
+    void Death()
     {
-        Instantiate(party, transform.position + new Vector3(0, 1, 0), transform.rotation);
+        Instantiate(death, transform.position + new Vector3(0, 1, 0), transform.rotation);
 
     }
 
@@ -201,13 +184,5 @@ public class Boss : MonoBehaviour {
         NavMesh.SamplePosition(randomPoint, out navHit, wanderRadius, -1);
         return new Vector3(navHit.position.x, transform.position.y, navHit.position.z);
     }
-
-    //private void OnGUI()
-    //{
-    //    string healthValue = health.ToString();
-
-    //    GUI.Label(new Rect(10, 10, 100, 30), healthValue);
-
-    //}
 
 }
